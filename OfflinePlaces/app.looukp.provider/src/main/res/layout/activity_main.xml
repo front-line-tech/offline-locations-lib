@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_margin"
+    tools:context=".ui.MainActivity">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/card_spacing"
+        app:cardUseCompatPadding="true"
+        android:visibility="visible">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/card_inner_padding">
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/ic_lightbulb_outline_black_24dp"
+                />
+
+            <TextView
+                android:id="@+id/text_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@id/icon"
+                android:layout_marginBottom="10dp"
+                android:text="@string/text_state_data_unavailable"
+                />
+
+            <Button
+                android:id="@+id/btn_extract"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/btn_extract"
+                android:layout_below="@id/text_state"
+                android:layout_alignParentEnd="true"
+                />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

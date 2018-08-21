@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="dialog_title_extracting">Extracting OS data</string>
+    <string name="dialog_message_initialising">Please wait…</string>
+    <string name="dialog_submessage_initialising">Counting source files.</string>
+
+    <string name="dialog_message_ready_to_process_file">Pending next file…</string>
+    <string name="dialog_message_processing_file">Processing: %s</string>
+    <string name="dialog_submessage_processed_X_of_Y_files_for_Z_places">Processed %d of %d files.\nIdentified %d places.</string>
+
+    <string name="toast_warning_extraction_error">An unexpected error occurred during extraction.</string>
+
+</resources>

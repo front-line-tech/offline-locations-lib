@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">lib.lookup.client</string>
+
+    <string name="btn_search">Search</string>
+</resources>

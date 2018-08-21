@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="dialog_search_title">Search places</string>
+    <string name="dialog_search_info">
+        Please type 3 or more characters to search for places by name, road name, or postcode.
+        Put a space between both parts of the postcode.
+        Press the search button to retrieve results.
+    </string>
+    <string name="dialog_hint_search">Place name, road name, or postcode</string>
+
+    <string name="toast_warning_already_searching">Search currently underway.</string>
+    <string name="toast_warning_search_not_valid">Please enter 3 or more characters.</string>
+</resources>

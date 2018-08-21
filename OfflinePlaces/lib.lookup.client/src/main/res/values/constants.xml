@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="min_length_partial_search">3</integer>
+
+    <string name="provider_package">com.flt.lookup.provider</string>
+
+</resources>
