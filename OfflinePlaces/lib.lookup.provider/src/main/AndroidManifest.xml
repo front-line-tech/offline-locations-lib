@@ -2,7 +2,7 @@
           package="com.flt.liblookupprovider">
 
     <permission
-        android:name="com.flt.liblookup.permission"
+        android:name="@string/liblookup_provider_permission"
         android:label="@string/permission_lookup_label"
         android:description="@string/permission_lookup_description"
         android:protectionLevel="normal"
