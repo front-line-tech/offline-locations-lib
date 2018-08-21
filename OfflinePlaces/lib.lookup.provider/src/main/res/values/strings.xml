@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">lib.lookup.provider</string>
+
+    <string name="permission_lookup_label">Access OS places</string>
+    <string name="permission_lookup_description">
+        Allows your app to access OS OpenNames places data on this device.
+    </string>
+
 </resources>

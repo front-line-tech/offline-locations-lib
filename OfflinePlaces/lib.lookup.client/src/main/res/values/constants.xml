@@ -2,7 +2,7 @@
 <resources>
     <integer name="min_length_partial_search">3</integer>
 
-    <string name="liblookup_provider_package">com.flt.lookup.provider</string>
+    <string name="liblookup_provider_package">com.flt.applooukpprovider</string>
     <string name="liblookup_provider_authority">com.flt.liblookup.opennames.provider</string>
     <string name="liblookup_provider_permission">com.flt.liblookup.permission</string>
 

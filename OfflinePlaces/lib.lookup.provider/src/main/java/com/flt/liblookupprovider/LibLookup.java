@@ -14,6 +14,7 @@ import com.flt.libshared.events.WeakEventProvider;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -25,7 +26,7 @@ public class LibLookup {
 
   private static final String PREF_extracted = "extraction.complete";
   private static final String PREF_extraction_file = "extraction.file";
-
+  private static final String PREF_extraction_date = "extraction.date";
 
   private Context appContext;
   private OpenNamesDb db;
@@ -178,6 +179,7 @@ public class LibLookup {
     SharedPreferences.Editor edit = prefs.edit();
     edit.putBoolean(PREF_extracted, false);
     edit.remove(PREF_extraction_file);
+    edit.remove(PREF_extraction_date);
     edit.commit();
     setState(State.DataUnavailable);
   }
@@ -187,6 +189,7 @@ public class LibLookup {
     SharedPreferences.Editor edit = prefs.edit();
     edit.putBoolean(PREF_extracted, true);
     edit.putString(PREF_extraction_file, file);
+    edit.putLong(PREF_extraction_date, new Date().getTime());
     edit.commit();
     Log.i(TAG, "Extraction marked complete.");
     setState(State.DataReady);
@@ -200,6 +203,16 @@ public class LibLookup {
       return and_in_db;
     } else {
       return false;
+    }
+  }
+
+  public Date getCompletedExtractionDate() {
+    SharedPreferences prefs = appContext.getSharedPreferences(prefs_name, MODE_PRIVATE);
+    long ticks = prefs.getLong(PREF_extraction_file, 0);
+    if (ticks > 0) {
+      return new Date(ticks);
+    } else {
+      return null;
     }
   }
 

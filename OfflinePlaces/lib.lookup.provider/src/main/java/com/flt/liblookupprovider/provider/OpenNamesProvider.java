@@ -28,11 +28,7 @@ public class OpenNamesProvider extends ContentProvider {
   private static final int code_places_search = 1;
 
   // Creates a UriMatcher object.
-  private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-
-  static {
-    uriMatcher.addURI(authority, path_search, code_places_search); // multiple rows in 'places' table
-  }
+  private UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
   private LibLookup lib;
   private LibLookup.State lib_state;
@@ -43,6 +39,7 @@ public class OpenNamesProvider extends ContentProvider {
   @Override
   public boolean onCreate() {
     Context context = getContext();
+    uriMatcher.addURI(authority(context), path_search, code_places_search);
     min_length_partial_search = context.getResources().getInteger(R.integer.min_length_partial_search);
     lib = LibLookup.getInstance(context);
     lib.getLibStateEventProvider().addListener(lib_listener);
