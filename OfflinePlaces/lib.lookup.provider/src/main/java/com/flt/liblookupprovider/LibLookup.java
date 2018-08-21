@@ -22,7 +22,10 @@ public class LibLookup {
   private static final String TAG = LibLookup.class.getSimpleName();
   private static final String db_name = "db_liblookup";
   private static final String prefs_name = "prefs_liblookup";
-  private static final String PREF_extracted = "extracted";
+
+  private static final String PREF_extracted = "extraction.complete";
+  private static final String PREF_extraction_file = "extraction.file";
+
 
   private Context appContext;
   private OpenNamesDb db;
@@ -137,7 +140,7 @@ public class LibLookup {
         x.doExtraction(stream_read, parser);
       }
       stream_read.close();
-      setExtracted();
+      setExtracted(selected_asset);
 
       state_extraction.setComplete();
       notifyListener_extraction();
@@ -174,14 +177,16 @@ public class LibLookup {
     SharedPreferences prefs = appContext.getSharedPreferences(prefs_name, MODE_PRIVATE);
     SharedPreferences.Editor edit = prefs.edit();
     edit.putBoolean(PREF_extracted, false);
+    edit.remove(PREF_extraction_file);
     edit.commit();
     setState(State.DataUnavailable);
   }
 
-  private void setExtracted() {
+  private void setExtracted(String file) {
     SharedPreferences prefs = appContext.getSharedPreferences(prefs_name, MODE_PRIVATE);
     SharedPreferences.Editor edit = prefs.edit();
     edit.putBoolean(PREF_extracted, true);
+    edit.putString(PREF_extraction_file, file);
     edit.commit();
     Log.i(TAG, "Extraction marked complete.");
     setState(State.DataReady);
@@ -198,6 +203,11 @@ public class LibLookup {
     }
   }
 
+  public String getCompletedExtractionFile() {
+    SharedPreferences prefs = appContext.getSharedPreferences(prefs_name, MODE_PRIVATE);
+    String file = prefs.getString(PREF_extraction_file, null);
+    return file;
+  }
 
   public static class StateChangeEvent {
     public State state;

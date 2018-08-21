@@ -17,21 +17,24 @@ import java.util.List;
 
 public class LookupClient {
 
-  private Context appContext;
-  private ContentResolver resolver;
-  private int min_length_partial_search;
+  private final Context appContext;
+  private final ContentResolver resolver;
 
-  public static Uri uri_base = Uri.parse("content://" + OpenNamesContent.authority);
-  public static Uri uri_lookup = Uri.withAppendedPath(uri_base, OpenNamesContent.path_search);
+  public final Uri uri_base;
+  public final Uri uri_lookup;
+
+  private int min_length_partial_search;
 
   public LookupClient(Context context) {
     this.appContext = context.getApplicationContext();
     this.resolver = appContext.getContentResolver();
+    this.uri_base = Uri.parse("content://" + OpenNamesContent.authority(appContext));
+    this.uri_lookup = Uri.withAppendedPath(uri_base, OpenNamesContent.path_search);
     this.min_length_partial_search = appContext.getResources().getInteger(R.integer.min_length_partial_search);
   }
 
   public static boolean providerPresentOnDevice(Context context) {
-    String providerPackage = context.getString(R.string.provider_package);
+    String providerPackage = context.getString(R.string.liblookup_provider_package);
     PackageManager pm = context.getPackageManager();
     List<PackageInfo> infos = pm.getInstalledPackages(0);
     for (PackageInfo info : infos) {

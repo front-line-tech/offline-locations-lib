@@ -1,2 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.flt.liblookupprovider"/>
+          package="com.flt.liblookupprovider">
+
+    <application
+        android:largeHeap="true">
+        <provider
+            android:name=".provider.OpenNamesProvider"
+            android:authorities="@string/liblookup_provider_authority"
+            android:permission="@string/liblookup_provider_permission"
+            android:enabled="true"
+            android:exported="true">
+        </provider>
+    </application>
+
+</manifest>

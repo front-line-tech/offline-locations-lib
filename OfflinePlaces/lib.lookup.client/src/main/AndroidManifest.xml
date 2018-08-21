@@ -1,2 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.flt.liblookupclient"/>
+          package="com.flt.liblookupclient">
+
+    <uses-permission android:name="@string/liblookup_provider_permission" />
+
+</manifest>
