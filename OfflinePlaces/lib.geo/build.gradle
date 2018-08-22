@@ -36,6 +36,6 @@ dependencies {
     */
 
     implementation 'org.apache.commons:commons-lang3:3.7'
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:6.2.1'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:6.4.0'
 
 }

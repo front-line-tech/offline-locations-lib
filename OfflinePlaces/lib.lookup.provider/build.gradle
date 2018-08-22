@@ -35,10 +35,10 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    api 'android.arch.lifecycle:extensions:1.1.1'
-    api 'android.arch.lifecycle:common-java8:1.1.1'
-    api 'android.arch.persistence.room:runtime:1.1.1'
-    annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
+    api ('android.arch.lifecycle:extensions:1.1.1') { force = true }
+    api ('android.arch.lifecycle:common-java8:1.1.1') { force = true }
+    api ('android.arch.persistence.room:runtime:1.1.1') { force = true }
+    annotationProcessor ("android.arch.persistence.room:compiler:1.1.1") { force = true }
 
     implementation 'com.opencsv:opencsv:4.2'
 
