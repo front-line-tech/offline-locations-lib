@@ -24,6 +24,28 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
     }
+
+    flavorDimensions "source"
+
+    productFlavors {
+        OpenNames { dimension "source" }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def project = "OfflinePlacesDataSource"
+            def SEP = "-"
+            def flavor = variant.productFlavors[0].name
+            def buildType = variant.variantData.variantConfiguration.buildType.name
+            def version = variant.versionName
+            def date = new Date();
+            def formattedDate = date.format('ddMMyyyy')
+            def newApkName = project + SEP + flavor + SEP + buildType + SEP + version + SEP + formattedDate + ".apk"
+            /* outputFileName = new File(output.outputFile.parent, newApkName) */
+            outputFileName = newApkName
+        }
+    }
+
 }
 
 dependencies {
