@@ -1,9 +1,9 @@
 package com.flt.applooukpprovider.ui;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -11,6 +11,7 @@ import android.text.util.Linkify;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.flt.applooukpprovider.LookupProviderApp;
@@ -32,10 +33,16 @@ public class MainActivity extends AbstractPermissionExtensionAppCompatActivity {
 
   LibLookup lib;
 
+  @BindView(R.id.icon) ImageView icon_state;
   @BindView(R.id.text_state) TextView text_state;
   @BindView(R.id.btn_extract) Button btn_extract;
 
-  @BindView(R.id.text_technicals) TextView technicals;
+
+  @BindView(R.id.text_technicals_01_gradle_client) TextView text_technicals_01_gradle_client;
+  @BindView(R.id.text_technicals_02_content_resolver) TextView text_technicals_02_content_resolver;
+
+  @BindView(R.id.card_technicals_01_gradle) CardView card_technicals_01_gradle;
+  @BindView(R.id.card_technicals_02_content) CardView card_technicals_02_content_resolver;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +52,15 @@ public class MainActivity extends AbstractPermissionExtensionAppCompatActivity {
 
     setTitleBarToVersionWith(getString(R.string.title_activity_main));
 
-    technicals.setText(Html.fromHtml(getString(R.string.text_technical_details,
-        getString(R.string.liblookup_provider_authority),
-        getString(R.string.liblookup_provider_permission))));
+    text_technicals_01_gradle_client.setText(Html.fromHtml(getString(R.string.text_technicals_01_gradle_client)));
 
-    // Linkify.addLinks(technicals, Linkify.ALL);
-    technicals.setMovementMethod(LinkMovementMethod.getInstance()); // alter default ignore-click behaviour!
+    text_technicals_02_content_resolver.setText(Html.fromHtml(getString(R.string.text_technicals_02_content_resolver,
+          getString(R.string.liblookup_provider_authority),
+          getString(R.string.liblookup_provider_permission))));
+
+    // alter default ignore-click behaviour!
+    text_technicals_01_gradle_client.setMovementMethod(LinkMovementMethod.getInstance());
+    text_technicals_02_content_resolver.setMovementMethod(LinkMovementMethod.getInstance());
   }
 
   @Override
@@ -71,27 +81,32 @@ public class MainActivity extends AbstractPermissionExtensionAppCompatActivity {
   private void updateUI() {
     switch (lib.getState()) {
       case DataExtracting:
+        icon_state.setImageResource(R.drawable.ic_hourglass_empty_black_24dp);
         text_state.setText(R.string.text_state_extracting);
         btn_extract.setVisibility(GONE);
         break;
 
       case DataUnavailable:
+        icon_state.setImageResource(R.drawable.ic_warning_black_24dp);
         text_state.setText(R.string.text_state_data_unavailable);
         btn_extract.setVisibility(VISIBLE);
         break;
 
       case DataReady:
+        icon_state.setImageResource(R.drawable.ic_lightbulb_outline_black_24dp);
         text_state.setText(getString(R.string.text_state_data_available, lib.getDb().getPlacesDao().count(), lib.getCompletedExtractionFile()));
         btn_extract.setVisibility(GONE);
         break;
 
       case Finished:
+        icon_state.setImageResource(R.drawable.ic_cancel_black_24dp);
         text_state.setText(R.string.text_state_finished);
         btn_extract.setVisibility(GONE);
         break;
 
       case Initialising:
       default:
+        icon_state.setImageResource(R.drawable.ic_hourglass_empty_black_24dp);
         text_state.setText(R.string.text_state_initialising);
         btn_extract.setVisibility(GONE);
         break;
@@ -117,6 +132,7 @@ public class MainActivity extends AbstractPermissionExtensionAppCompatActivity {
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
+    menu.add(Menu.NONE, R.string.menu_show_developer_notes, 0, R.string.menu_show_developer_notes);
     menu.add(Menu.NONE, R.string.menu_force_extract, 0, R.string.menu_force_extract);
     menu.add(Menu.NONE, R.string.menu_about_app, 0, R.string.menu_about_app);
     menu.add(Menu.NONE, R.string.menu_os_licenses, 0, R.string.menu_os_licenses);
@@ -138,6 +154,10 @@ public class MainActivity extends AbstractPermissionExtensionAppCompatActivity {
         doExtraction(true);
         return true;
 
+      case R.string.menu_show_developer_notes:
+        showDeveloperNotes();
+        return true;
+
       default:
         return super.onOptionsItemSelected(item);
     }
@@ -145,6 +165,11 @@ public class MainActivity extends AbstractPermissionExtensionAppCompatActivity {
 
   private void showLicenses() {
     startActivity(new Intent(this, OssLicensesMenuActivity.class));
+  }
+
+  private void showDeveloperNotes() {
+    card_technicals_01_gradle.setVisibility(VISIBLE);
+    card_technicals_02_content_resolver.setVisibility(VISIBLE);
   }
 
   private void showAbout() {

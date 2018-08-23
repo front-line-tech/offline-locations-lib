@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">Lookup Client</string>
+    <string name="app_name">Offline Locations Sample</string>
+    <string name="title_activity_maps">Offline Locations Sample</string>
+
+    <string name="state_provider_unavailable">Offline Data Source unavailable.</string>
+    <string name="state_ready">Ready to search.</string>
+
+    <string name="toast_warning_search_cancelled">Search cancelled.</string>
+    <string name="toast_warning_place_has_no_location">Unable to determine coordinates for this place.</string>
+
 </resources>

@@ -12,7 +12,8 @@
     <string name="text_state_extracting">Extracting OS OpenNames places from data source. Please be patient, this process can take up to 30 minutes…</string>
     <string name="text_state_data_available">
         Ordnance Survey OpenNames data is available to other apps on this device.
-        \n\nThere are currently %d items in the database, extracted from: %s
+        \n\nThere are currently %d items in the database.
+        \n\nSource: %s
     </string>
 
     <string name="btn_ok">OK</string>
@@ -21,16 +22,19 @@
     <string name="menu_about_app">About this app…</string>
     <string name="menu_os_licenses">Open source licenses…</string>
     <string name="menu_force_extract">Force extraction…</string>
+    <string name="menu_show_developer_notes">Developer mode…</string>
 
-    <string name="text_technical_details"><![CDATA[
-        <p>Apps that wish to exploit this data may use the client library available from the <b>offline-locations-lib</b> project:</p>
-        <p><a href="https://github.com/front-line-tech/offline-locations-lib">https://github.com/front-line-tech/offline-locations-lib</a></p>
+    <string name="text_technicals_01_gradle_client"><![CDATA[
+        <p>Apps that wish to exploit this data may use the client library available from the
+        <a href="https://github.com/front-line-tech/offline-locations-lib">offline-locations-lib</a> project.</p>
+        <p>Gradle implementation directive TBC…</p>
+    ]]></string>
+    <string name="text_technicals_02_content_resolver"><![CDATA[
         <p>Alternatively, the <b>ContentProvider</b> is documented at the same location
         and may be accessed through Android\'s <b>ContentResolver</b> class.</p>
         <p><b>Authority:</b><br/>%s</p>
         <p><b>Permission:</b><br/>%s</p>
-        ]]>
-    </string>
+    ]]></string>
 
     <string name="dialog_title_about">OS Data Source</string>
     <string name="dialog_message_about">
