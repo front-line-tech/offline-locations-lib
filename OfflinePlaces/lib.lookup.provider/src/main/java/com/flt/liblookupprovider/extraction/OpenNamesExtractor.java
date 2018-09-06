@@ -27,17 +27,6 @@ public class OpenNamesExtractor {
     this.listener = listener;
   }
 
-  public List<String> findOpenNamesZipAssets() throws IOException {
-    String[] paths = context.getAssets().list("");
-    List<String> goodPaths = new LinkedList<>();
-    for (String path : paths) {
-      if (path.toLowerCase().endsWith(".zip")) {
-        goodPaths.add(path);
-      }
-    }
-    return goodPaths;
-  }
-
   public int countRelevantFiles(InputStream input, StreamParser parser) throws IOException {
     int relevant_files = 0;
     boolean finished = false;

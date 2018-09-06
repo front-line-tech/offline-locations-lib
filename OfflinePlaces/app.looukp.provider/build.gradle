@@ -25,10 +25,18 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
     }
 
-    flavorDimensions "source"
+    flavorDimensions "source", "bundling"
 
     productFlavors {
         OpenNames { dimension "source" }
+        Asset {
+            dimension "bundling"
+            versionNameSuffix "-Asset"
+        }
+        ApkExpansion {
+            dimension "bundling"
+            versionNameSuffix "-ExtensionFile"
+        }
     }
 
     applicationVariants.all { variant ->
@@ -41,11 +49,9 @@ android {
             def date = new Date();
             def formattedDate = date.format('ddMMyyyy')
             def newApkName = project + SEP + flavor + SEP + buildType + SEP + version + SEP + formattedDate + ".apk"
-            /* outputFileName = new File(output.outputFile.parent, newApkName) */
             outputFileName = newApkName
         }
     }
-
 }
 
 dependencies {

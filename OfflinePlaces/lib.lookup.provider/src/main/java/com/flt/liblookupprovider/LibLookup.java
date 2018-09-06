@@ -1,17 +1,24 @@
 package com.flt.liblookupprovider;
 
+import android.Manifest;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
+import android.os.Build;
 import android.util.Log;
 
 import com.flt.liblookupprovider.db.OpenNamesDb;
 import com.flt.liblookupprovider.extraction.ExtractionState;
 import com.flt.liblookupprovider.extraction.OpenNamesDbCsvParser;
 import com.flt.liblookupprovider.extraction.OpenNamesExtractor;
+import com.flt.liblookupprovider.extraction.OpenNamesFileFinder;
 import com.flt.libshared.events.WeakEventProvider;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -34,11 +41,15 @@ public class LibLookup {
   private State state_lib;
   private ExtractionState state_extraction;
 
+  private OpenNamesFileFinder finder;
+
   private WeakEventProvider<StateChangeEvent> provider_state;
   private WeakEventProvider<ExtractionState> provider_extraction_state;
 
   public enum State {
     Initialising(false),
+    SourceUnavailable(false),
+    PendingPermission(false),
     DataUnavailable(false),
     DataExtracting(false),
     DataReady(true),
@@ -72,9 +83,12 @@ public class LibLookup {
   private void init() {
     setState(State.Initialising);
     this.db = initDb();
+    this.finder = new OpenNamesFileFinder(appContext);
+
     if (hasExtracted()) {
       setState(State.DataReady);
     } else {
+
       setState(State.DataUnavailable);
     }
   }
@@ -106,7 +120,24 @@ public class LibLookup {
     return state_lib;
   }
 
-  public void doExtraction(boolean overwrite, boolean test_only) throws IOException {
+  public boolean hasPermissionToExtract() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      return appContext.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    } else {
+      return true;
+    }
+  }
+
+  public boolean isExtractionSourceFound() {
+    try {
+      return StringUtils.isNotBlank(finder.nameBestOpenNamesZipCandidate());
+    } catch (Exception e) {
+      Log.w(TAG, "Exception caught checking for any extractable source.", e);
+      return false;
+    }
+  }
+
+  public void doExtraction(boolean overwrite, boolean test_only) {
     if (hasExtracted() && !overwrite) {
       Log.d(TAG, "OpenNames data already extracted, set overwrite flag to delete and replace data.");
       return;
@@ -118,34 +149,48 @@ public class LibLookup {
       unsetExtracted();
     }
 
-    Log.i(TAG, "Extracting OpenNames data...");
-    setState(State.DataExtracting);
+    try {
+      InputStream stream_count = finder.getBestOpenNamesZipCandidate();
+      if (stream_count != null) {
+        Log.i(TAG, "Extracting OpenNames data...");
+        setState(State.DataExtracting);
 
-    OpenNamesExtractor x = new OpenNamesExtractor(appContext, extraction_listener);
-    OpenNamesDbCsvParser parser = new OpenNamesDbCsvParser(db);
+        OpenNamesExtractor extractor = new OpenNamesExtractor(appContext, extraction_listener);
+        OpenNamesDbCsvParser parser = new OpenNamesDbCsvParser(db);
 
-    List<String> assets = x.findOpenNamesZipAssets();
-    if (assets.size() > 0) {
-      AssetManager mgr = appContext.getAssets();
-      String selected_asset = assets.get(0);
+        String selected_asset = finder.nameBestOpenNamesZipCandidate();
 
-      InputStream stream_count = mgr.open(selected_asset);
-      state_extraction = new ExtractionState(selected_asset, x.countRelevantFiles(stream_count, parser));
-      stream_count.close();
-      notifyListener_extraction();
+        state_extraction = new ExtractionState(
+            selected_asset,
+            extractor.countRelevantFiles(stream_count, parser));
 
-      InputStream stream_read = mgr.open(selected_asset);
-      if (test_only) {
-        x.doExtraction(stream_read, parser, 5);
+        stream_count.close();
+        notifyListener_extraction();
+
+        InputStream stream_read = finder.getBestOpenNamesZipCandidate();
+        if (test_only) {
+          extractor.doExtraction(stream_read, parser, 5);
+        } else {
+          extractor.doExtraction(stream_read, parser);
+        }
+        stream_read.close();
+        setExtracted(selected_asset);
+
+        state_extraction.setComplete();
+        notifyListener_extraction();
       } else {
-        x.doExtraction(stream_read, parser);
+        Log.w(TAG, "Unable to extract OpenNames data.");
+        setState(State.SourceUnavailable);
       }
-      stream_read.close();
-      setExtracted(selected_asset);
 
-      state_extraction.setComplete();
-      notifyListener_extraction();
+    } catch (SecurityException ex) {
+      Log.w(TAG, "Security Exception caught attempting to extract.", ex);
+      setState(State.PendingPermission);
+    } catch (Exception ex) {
+      Log.w(TAG, "Unexpected Exception caught attempting to extract.", ex);
+      setState(State.DataUnavailable);
     }
+
   }
 
   public OpenNamesDb getDb() {
