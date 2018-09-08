@@ -47,21 +47,31 @@ public class LibLookup {
   private WeakEventProvider<ExtractionState> provider_extraction_state;
 
   public enum State {
-    Initialising(false),
-    SourceUnavailable(false),
-    PendingPermission(false),
-    DataUnavailable(false),
-    DataExtracting(false),
-    DataReady(true),
-    Finished(false);
+    Initialising(false, false, false, false),
+    SourceUnavailable(false, true, true, false),
+    PendingPermission(false, false, false, true),
+    ReadyToExtract(false, true, false, false),
+    DataExtracting(false, false, false, false),
+    ErrorInExtraction(false, true, false, false),
+    DataReady(true, false, false, false),
+    ShutDown(false, false, false, false);
 
     private boolean can_serve_data;
+    private boolean may_extract;
+    private boolean need_download;
+    private boolean need_permissions;
 
-    State(boolean can_serve_data) {
+    State(boolean can_serve_data, boolean may_extract, boolean need_download, boolean need_permissions) {
       this.can_serve_data = can_serve_data;
+      this.may_extract = may_extract;
+      this.need_download = need_download;
+      this.need_permissions = need_permissions;
     }
 
     public boolean canServeData() { return can_serve_data; }
+    public boolean mayExtractData() { return may_extract; }
+    public boolean needsDownload() { return need_download; }
+    public boolean needsPermissions() { return need_permissions; }
   }
 
   private static LibLookup instance;
@@ -88,8 +98,7 @@ public class LibLookup {
     if (hasExtracted()) {
       setState(State.DataReady);
     } else {
-
-      setState(State.DataUnavailable);
+      setState(State.ReadyToExtract);
     }
   }
 
@@ -149,6 +158,11 @@ public class LibLookup {
       unsetExtracted();
     }
 
+    if (!isExtractionSourceFound()) {
+      setState(State.SourceUnavailable);
+      return;
+    }
+
     try {
       InputStream stream_count = finder.getBestOpenNamesZipCandidate();
       if (stream_count != null) {
@@ -188,7 +202,7 @@ public class LibLookup {
       setState(State.PendingPermission);
     } catch (Exception ex) {
       Log.w(TAG, "Unexpected Exception caught attempting to extract.", ex);
-      setState(State.DataUnavailable);
+      setState(State.ErrorInExtraction);
     }
 
   }
@@ -226,7 +240,7 @@ public class LibLookup {
     edit.remove(PREF_extraction_file);
     edit.remove(PREF_extraction_date);
     edit.commit();
-    setState(State.DataUnavailable);
+    setState(State.ReadyToExtract);
   }
 
   private void setExtracted(String file) {

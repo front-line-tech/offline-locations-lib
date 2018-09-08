@@ -2,9 +2,27 @@
     <string name="app_name">OS Data Source</string>
     <string name="title_activity_main">@string/app_name</string>
 
+    <string name="text_need_permissions">
+        Please grant permission for this provider to extract your data using the button below.
+        This permission is required to read the external data file of offline place data.
+    </string>
+
     <string name="text_state_data_unavailable">
         This OS OpenNames data source has not yet been extracted.
         \n\nTo extract, use the button below.
+    </string>
+
+    <string name="text_state_source_unavailable">
+        No data source file found. To download offline location data, or try again, use the buttons below.
+    </string>
+
+    <string name="text_state_extraction_error">
+        An error occurred during extraction. You may try again using the extraction button. If this issue recurs, please report it.
+    </string>
+
+    <string name="text_state_pending_permission">
+        This app requires some additional permissions to read from external storage and extract the data.
+        \n\nTo grant the appropriate permissions, use the button below.
     </string>
 
     <string name="text_state_finished">OS data source closed.</string>
@@ -17,7 +35,9 @@
     </string>
 
     <string name="btn_ok">OK</string>
-    <string name="btn_extract">Extract now…</string>
+    <string name="btn_extract">Extract…</string>
+    <string name="btn_download">Download…</string>
+    <string name="btn_permissions">Permissions…</string>
 
     <string name="menu_about_app">About this app…</string>
     <string name="menu_os_licenses">Open source licenses…</string>

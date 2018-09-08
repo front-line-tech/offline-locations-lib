@@ -36,7 +36,11 @@ public class MainActivity extends AbstractPermissionExtensionAppCompatActivity {
   @BindView(R.id.icon) ImageView icon_state;
   @BindView(R.id.text_state) TextView text_state;
   @BindView(R.id.btn_extract) Button btn_extract;
+  @BindView(R.id.btn_download) Button btn_download;
 
+  @BindView(R.id.card_status) CardView card_status;
+  @BindView(R.id.card_permissions) CardView card_permissions;
+  @BindView(R.id.btn_permissions) Button btn_permissions;
 
   @BindView(R.id.text_technicals_01_gradle_client) TextView text_technicals_01_gradle_client;
   @BindView(R.id.text_technicals_02_content_resolver) TextView text_technicals_02_content_resolver;
@@ -75,41 +79,66 @@ public class MainActivity extends AbstractPermissionExtensionAppCompatActivity {
   protected void onPause() {
     super.onPause();
     lib.getLibStateEventProvider().removeListener(lib_state_listener);
-    lib = null;
   }
 
   private void updateUI() {
-    switch (lib.getState()) {
-      case DataExtracting:
-        icon_state.setImageResource(R.drawable.ic_hourglass_empty_black_24dp);
-        text_state.setText(R.string.text_state_extracting);
-        btn_extract.setVisibility(GONE);
-        break;
+    if (anyOutstandingPermissions()) {
+      card_permissions.setVisibility(VISIBLE);
+      card_status.setVisibility(GONE);
 
-      case DataUnavailable:
-        icon_state.setImageResource(R.drawable.ic_warning_black_24dp);
-        text_state.setText(R.string.text_state_data_unavailable);
-        btn_extract.setVisibility(VISIBLE);
-        break;
+    } else {
+      LibLookup.State state = lib.getState();
 
-      case DataReady:
-        icon_state.setImageResource(R.drawable.ic_lightbulb_outline_black_24dp);
-        text_state.setText(getString(R.string.text_state_data_available, lib.getDb().getPlacesDao().count(), lib.getCompletedExtractionFile()));
-        btn_extract.setVisibility(GONE);
-        break;
+      btn_extract.setVisibility(state.mayExtractData() ? VISIBLE : GONE);
+      // btn_download.setVisibility(state.needsDownload() ? VISIBLE : GONE);
+      btn_download.setVisibility(GONE); // no download option for now... TODO!!!
 
-      case Finished:
-        icon_state.setImageResource(R.drawable.ic_cancel_black_24dp);
-        text_state.setText(R.string.text_state_finished);
-        btn_extract.setVisibility(GONE);
-        break;
+      card_permissions.setVisibility(state.needsPermissions() ? VISIBLE : GONE);
+      card_status.setVisibility(state.needsPermissions() ? GONE : VISIBLE);
 
-      case Initialising:
-      default:
-        icon_state.setImageResource(R.drawable.ic_hourglass_empty_black_24dp);
-        text_state.setText(R.string.text_state_initialising);
-        btn_extract.setVisibility(GONE);
-        break;
+
+      switch (state) {
+        case DataExtracting:
+          icon_state.setImageResource(R.drawable.ic_hourglass_empty_black_24dp);
+          text_state.setText(R.string.text_state_extracting);
+          break;
+
+        case ReadyToExtract:
+          icon_state.setImageResource(R.drawable.ic_warning_black_24dp);
+          text_state.setText(R.string.text_state_data_unavailable);
+          break;
+
+        case PendingPermission:
+          icon_state.setImageResource(R.drawable.ic_warning_black_24dp);
+          text_state.setText(R.string.text_state_pending_permission);
+          break;
+
+        case SourceUnavailable:
+          icon_state.setImageResource(R.drawable.ic_warning_black_24dp);
+          text_state.setText(R.string.text_state_source_unavailable);
+          break;
+
+        case ErrorInExtraction:
+          icon_state.setImageResource(R.drawable.ic_warning_black_24dp);
+          text_state.setText(R.string.text_state_extraction_error);
+          break;
+
+        case DataReady:
+          icon_state.setImageResource(R.drawable.ic_lightbulb_outline_black_24dp);
+          text_state.setText(getString(R.string.text_state_data_available, lib.getDb().getPlacesDao().count(), lib.getCompletedExtractionFile()));
+          break;
+
+        case ShutDown:
+          icon_state.setImageResource(R.drawable.ic_cancel_black_24dp);
+          text_state.setText(R.string.text_state_finished);
+          break;
+
+        default:
+        case Initialising:
+          icon_state.setImageResource(R.drawable.ic_hourglass_empty_black_24dp);
+          text_state.setText(R.string.text_state_initialising);
+          break;
+      }
     }
   }
 
@@ -124,6 +153,11 @@ public class MainActivity extends AbstractPermissionExtensionAppCompatActivity {
   @OnClick(R.id.btn_extract)
   public void extract_click() {
     doExtraction(false);
+  }
+
+  @OnClick(R.id.btn_permissions)
+  public void permissions_click() {
+    requestAllPermissions();
   }
 
   private void doExtraction(boolean override) {

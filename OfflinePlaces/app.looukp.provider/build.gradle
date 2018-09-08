@@ -8,8 +8,8 @@ android {
         applicationId "com.flt.applooukpprovider"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 3
-        versionName "0.3"
+        versionCode 4
+        versionName "0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -31,11 +31,9 @@ android {
         OpenNames { dimension "source" }
         Asset {
             dimension "bundling"
-            versionNameSuffix "-Asset"
         }
         ApkExpansion {
             dimension "bundling"
-            versionNameSuffix "-ExtensionFile"
         }
     }
 
@@ -43,12 +41,13 @@ android {
         variant.outputs.all { output ->
             def project = "OfflinePlacesDataSource"
             def SEP = "-"
-            def flavor = variant.productFlavors[0].name
+            def flavor0 = variant.productFlavors[0].name
+            def flavor1 = variant.productFlavors[1].name
             def buildType = variant.variantData.variantConfiguration.buildType.name
             def version = variant.versionName
             def date = new Date();
             def formattedDate = date.format('ddMMyyyy')
-            def newApkName = project + SEP + flavor + SEP + buildType + SEP + version + SEP + formattedDate + ".apk"
+            def newApkName = project + SEP + flavor0 + SEP + flavor1 + SEP + buildType + SEP + version + SEP + formattedDate + ".apk"
             outputFileName = newApkName
         }
     }

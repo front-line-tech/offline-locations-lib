@@ -14,6 +14,7 @@
         android:padding="@dimen/activity_margin">
 
         <android.support.v7.widget.CardView
+            android:id="@+id/card_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/card_spacing"
@@ -50,6 +51,59 @@
                     android:layout_width="wrap_content"
                     android:text="@string/btn_extract"
                     android:layout_below="@id/text_state"
+                    android:layout_alignParentEnd="true"
+                    />
+
+                <Button
+                    android:id="@+id/btn_download"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/btn_download"
+                    android:layout_below="@id/text_state"
+                    android:layout_toStartOf="@id/btn_extract"
+                    />
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_permissions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/card_spacing"
+            app:cardUseCompatPadding="true"
+            android:visibility="visible">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/card_inner_padding">
+
+                <ImageView
+                    android:id="@+id/icon_permissions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/ic_new_releases_black_24dp"
+                    />
+
+                <TextView
+                    android:id="@+id/text_need_permissions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@id/icon_permissions"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/text_need_permissions"
+                    />
+
+                <Button
+                    android:id="@+id/btn_permissions"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/btn_permissions"
+                    android:layout_below="@id/text_need_permissions"
                     android:layout_alignParentEnd="true"
                     />
 

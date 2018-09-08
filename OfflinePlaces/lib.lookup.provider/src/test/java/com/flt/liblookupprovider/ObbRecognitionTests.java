@@ -14,7 +14,7 @@ public class ObbRecognitionTests {
 
     String obb = "main.12345.some.package.name.obb";
 
-    int value = ObbFilenameUnderstander.retrieveObbVersion(obb);
+    int value = ObbFilenameUnderstander.retrieveMainObbVersion(obb);
     Assert.assertEquals(12345, value);
 
 
