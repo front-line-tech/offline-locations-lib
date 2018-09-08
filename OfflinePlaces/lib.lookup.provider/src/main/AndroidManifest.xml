@@ -15,7 +15,7 @@
         <provider
             android:name=".provider.OpenNamesProvider"
             android:authorities="@string/liblookup_provider_authority"
-            android:permission="@string/liblookup_provider_permission"
+            android:permission="com.flt.liblookup.permission"
             android:enabled="true"
             android:exported="true">
         </provider>
