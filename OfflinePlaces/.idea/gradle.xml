@@ -14,6 +14,8 @@
             <option value="$PROJECT_DIR$/lib.geo" />
             <option value="$PROJECT_DIR$/lib.lookup.client" />
             <option value="$PROJECT_DIR$/lib.lookup.provider" />
+            <option value="$PROJECT_DIR$/lib.lookup.provider.downloader" />
+            <option value="$PROJECT_DIR$/lib.lookup.provider.licensing" />
             <option value="$PROJECT_DIR$/lib.shared" />
           </set>
         </option>

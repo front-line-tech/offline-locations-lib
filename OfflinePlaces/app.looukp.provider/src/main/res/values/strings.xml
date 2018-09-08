@@ -13,7 +13,7 @@
     </string>
 
     <string name="text_state_source_unavailable">
-        No data source file found. To download offline location data, or try again, use the buttons below.
+        No data source file found. To try again, use the button below.
     </string>
 
     <string name="text_state_extraction_error">
