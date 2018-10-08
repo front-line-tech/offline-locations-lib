@@ -18,13 +18,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.flt.libgeo.LatitudeLongitude;
+import com.flt.liblookupclient.geo.LatitudeLongitude;
 import com.flt.liblookupclient.LookupClient;
 import com.flt.liblookupclient.R;
 import com.flt.liblookupclient.entities.OpenNamesPlace;
 import com.flt.liblookupclient.ui.adapters.OpenNamesPlacesResultsAdapter;
 import com.flt.liblookupclient.ui.tasks.AbstractSearchTask;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.Objects;
 

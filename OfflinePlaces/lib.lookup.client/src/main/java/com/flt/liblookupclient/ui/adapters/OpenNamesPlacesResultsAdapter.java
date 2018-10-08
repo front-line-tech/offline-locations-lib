@@ -11,12 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.flt.libgeo.LatitudeLongitude;
+import com.flt.liblookupclient.geo.LatitudeLongitude;
 import com.flt.liblookupclient.R;
 import com.flt.liblookupclient.entities.OpenNamesHelper;
 import com.flt.liblookupclient.entities.OpenNamesPlace;
 import com.flt.liblookupclient.entities.OpenNamesSortHelper;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.Collection;
 

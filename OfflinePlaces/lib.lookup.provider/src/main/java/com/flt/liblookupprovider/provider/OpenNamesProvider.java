@@ -11,7 +11,7 @@ import android.util.Log;
 
 import com.flt.liblookupprovider.LibLookup;
 import com.flt.liblookupprovider.R;
-import com.flt.libshared.events.WeakEventProvider;
+import com.flt.liblookupclient.events.WeakEventProvider;
 
 import org.apache.commons.lang3.StringUtils;
 

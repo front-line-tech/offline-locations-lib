@@ -18,7 +18,7 @@ import com.flt.applooukpprovider.LookupProviderApp;
 import com.flt.applooukpprovider.R;
 import com.flt.applooukpprovider.tasks.ExtractDataTask;
 import com.flt.liblookupprovider.LibLookup;
-import com.flt.libshared.events.WeakEventProvider;
+import com.flt.liblookupclient.events.WeakEventProvider;
 import com.flt.servicelib.AbstractPermissionExtensionAppCompatActivity;
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 

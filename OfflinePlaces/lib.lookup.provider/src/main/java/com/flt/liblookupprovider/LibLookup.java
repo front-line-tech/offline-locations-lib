@@ -5,7 +5,6 @@ import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
 import android.os.Build;
 import android.util.Log;
 
@@ -14,15 +13,12 @@ import com.flt.liblookupprovider.extraction.ExtractionState;
 import com.flt.liblookupprovider.extraction.OpenNamesDbCsvParser;
 import com.flt.liblookupprovider.extraction.OpenNamesExtractor;
 import com.flt.liblookupprovider.extraction.OpenNamesFileFinder;
-import com.flt.libshared.events.WeakEventProvider;
+import com.flt.liblookupclient.events.WeakEventProvider;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
-import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 

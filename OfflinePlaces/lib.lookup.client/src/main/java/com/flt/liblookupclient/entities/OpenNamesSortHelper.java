@@ -2,8 +2,8 @@ package com.flt.liblookupclient.entities;
 
 import android.support.annotation.NonNull;
 
-import com.flt.libgeo.GeoConverter;
-import com.flt.libgeo.LatitudeLongitude;
+import com.flt.liblookupclient.geo.GeoConverter;
+import com.flt.liblookupclient.geo.LatitudeLongitude;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.apache.commons.lang3.StringUtils;

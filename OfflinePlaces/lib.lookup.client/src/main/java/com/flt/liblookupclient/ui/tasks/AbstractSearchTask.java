@@ -3,10 +3,9 @@ package com.flt.liblookupclient.ui.tasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.flt.libgeo.LatitudeLongitude;
+import com.flt.liblookupclient.geo.LatitudeLongitude;
 import com.flt.liblookupclient.LookupClient;
 import com.flt.liblookupclient.entities.OpenNamesPlace;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.Collection;
 

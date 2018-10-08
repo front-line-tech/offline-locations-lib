@@ -1,2 +1,1 @@
-include ':app', ':lib.geo', ':lib.lookup.client', ':lib.lookup.provider', ':app.looukp.provider', ':app.lookup.client.sample', ':lib.shared', ':lib.lookup.provider.licensing', ':lib.lookup.provider.downloader'
-include ':lib.lookup.provider.licensing'
+include ':lib.lookup.client', ':lib.lookup.provider', ':app.looukp.provider', ':app.lookup.client.sample'

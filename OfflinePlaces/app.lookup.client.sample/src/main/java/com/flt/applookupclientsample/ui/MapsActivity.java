@@ -8,9 +8,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flt.applookupclientsample.R;
-import com.flt.libgeo.GeoConverter;
-import com.flt.libgeo.LatitudeLongitude;
 import com.flt.liblookupclient.LookupClient;
+import com.flt.liblookupclient.geo.GeoConverter;
+import com.flt.liblookupclient.geo.LatitudeLongitude;
 import com.flt.liblookupclient.entities.OpenNamesHelper;
 import com.flt.liblookupclient.entities.OpenNamesPlace;
 import com.flt.liblookupclient.ui.dialogs.AbstractPlacesSearchDialog;

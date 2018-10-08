@@ -8,8 +8,8 @@ import android.widget.Toast;
 import com.flt.applooukpprovider.R;
 import com.flt.liblookupprovider.LibLookup;
 import com.flt.liblookupprovider.extraction.ExtractionState;
-import com.flt.libshared.dialogs.BusyTimerDialog;
-import com.flt.libshared.events.WeakEventProvider;
+import com.flt.liblookupclient.dialogs.BusyTimerDialog;
+import com.flt.liblookupclient.events.WeakEventProvider;
 
 import org.apache.commons.lang3.StringUtils;
 
