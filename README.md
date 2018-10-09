@@ -1,9 +1,9 @@
 # Offline Locations Lib
-The Offline Locations Lib allows you to build Android apps that can query a database of Ordnance Survey OpenMaps locations across the UK.
+The Offline Locations Lib allows you to build Android apps that can query an offline database of [Ordnance Survey OpenNames](https://www.ordnancesurvey.co.uk/business-and-government/products/os-open-names.html) locations (including places, roads, and postcodes) across the UK.
 
-The OS Data Source app first indexes data from Ordnance Survey, and then makes it available to other apps on the same Android device using the Android [Content Provider](https://developer.android.com/guide/topics/providers/content-providers) interface.
+The OS Data Source app first indexes data from an OS OpenNames download, and then makes it available to other apps on the same Android device using the Android [Content Provider](https://developer.android.com/guide/topics/providers/content-providers) interface.
 
-The client library allows you to access this simply, and provides a UI for simple searching.
+The client library allows you to access this through simple classes, and provides a UI for simple searching.
 
 ## Try it now
 1. Install the [Ordnance Survey Offline Data Source](https://play.google.com/store/apps/details?id=com.flt.applooukpprovider) app from Google Play.
