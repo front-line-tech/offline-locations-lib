@@ -74,7 +74,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
   @OnClick(R.id.fab_search)
   public void search_click() {
-     dialog = new AbstractPlacesSearchDialog(this, dialog_listener) {
+    dialog = new AbstractPlacesSearchDialog(this, dialog_listener) {
       @Override
       protected LatitudeLongitude getOrigin() {
         CameraPosition camera = map.getCameraPosition();
