@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="sd_label_search">Find location…</string>
+    <string name="sd_label_centre">Centre the map…</string>
+
+</resources>

@@ -42,7 +42,7 @@ android {
             def flavor = variant.productFlavors[0].name
             def buildType = variant.variantData.variantConfiguration.buildType.name
             def version = variant.versionName
-            def date = new Date();
+            def date = new Date()
             def formattedDate = date.format('ddMMyyyy')
             def newApkName = project + SEP + flavor + SEP + buildType + SEP + version + SEP + formattedDate + ".apk"
             outputFileName = newApkName
@@ -55,7 +55,10 @@ dependencies {
 
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
+
     implementation 'com.google.android.gms:play-services-maps:16.0.0'
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
@@ -70,5 +73,8 @@ dependencies {
     implementation 'front-line-tech.android-libs:offline-locations-lib:1.1'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:6.4.0'
 
+
     implementation 'com.google.android.gms:play-services-oss-licenses:16.0.1'
+    implementation 'com.leinardi.android:speed-dial:2.0.1'
+
 }

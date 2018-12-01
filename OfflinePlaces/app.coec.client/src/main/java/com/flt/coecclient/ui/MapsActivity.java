@@ -1,12 +1,13 @@
 package com.flt.coecclient.ui;
 
+import android.location.Location;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.flt.coecclient.CoecClientApp;
 import com.flt.coecclient.R;
 import com.flt.liblookupclient.LookupClient;
 import com.flt.liblookupclient.entities.OpenNamesHelper;
@@ -14,26 +15,35 @@ import com.flt.liblookupclient.entities.OpenNamesPlace;
 import com.flt.liblookupclient.geo.GeoConverter;
 import com.flt.liblookupclient.geo.LatitudeLongitude;
 import com.flt.liblookupclient.ui.dialogs.AbstractPlacesSearchDialog;
+import com.flt.servicelib.AbstractPermissionExtensionAppCompatActivity;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.leinardi.android.speeddial.SpeedDialActionItem;
+import com.leinardi.android.speeddial.SpeedDialView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import timber.log.Timber;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends AbstractPermissionExtensionAppCompatActivity implements OnMapReadyCallback {
 
-  @BindView(R.id.fab_search) FloatingActionButton fab_search;
+  private static final String TAG = MapsActivity.class.getSimpleName();
+
+  @BindView(R.id.speedial) SpeedDialView speeddial;
   @BindView(R.id.text_state) TextView text_state;
 
   private GoogleMap map;
-  private LookupClient client;
+  private FusedLocationProviderClient location_client;
 
-  private AbstractPlacesSearchDialog dialog;
+  private LookupClient lookup_client;
+  private AbstractPlacesSearchDialog lookup_dialog;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -42,24 +52,83 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
     mapFragment.getMapAsync(this);
     ButterKnife.bind(this);
-    createClient();
   }
 
-  private void createClient() {
-    client = new LookupClient(this);
+  private void prepareClients() {
+    location_client = createLocationClient();
+    lookup_client = createLookupClient();
+  }
+
+  private LookupClient createLookupClient() {
+    return new LookupClient(this);
+  }
+
+  private FusedLocationProviderClient createLocationClient() { return LocationServices.getFusedLocationProviderClient(this); }
+
+  private void prepareSpeedDial() {
+    speeddial.addActionItem(
+        new SpeedDialActionItem.Builder(R.id.sd_search, R.drawable.ic_search_white_24dp)
+            .setLabel(R.string.sd_label_search)
+            .create());
+
+    speeddial.addActionItem(
+        new SpeedDialActionItem.Builder(R.id.sd_centre, R.drawable.ic_my_location_white_24dp)
+            .setLabel(R.string.sd_label_centre)
+            .create());
+
+    speeddial.setOnActionSelectedListener(speedDialActionItem -> {
+      switch (speedDialActionItem.getId()) {
+        case R.id.sd_search:
+          search_click();
+          return false; // true to keep the Speed Dial open
+
+        case R.id.sd_centre:
+          centre_click();
+          return false;
+
+        default:
+          return false;
+      }
+    });
   }
 
   @Override
   protected void onResume() {
     super.onResume();
+    prepareClients();
+    prepareSpeedDial();
     updateUI();
   }
 
   private void updateUI() {
     boolean hasMap = map != null;
     boolean maySearch = hasMap && LookupClient.providerPresentOnDevice(this);
-    fab_search.setVisibility(maySearch ? View.VISIBLE : View.GONE);
+    speeddial.setVisibility(maySearch ? View.VISIBLE : View.GONE);
     text_state.setText(maySearch ? R.string.state_ready : R.string.state_provider_unavailable);
+  }
+
+  private void centre_click() {
+    if (anyOutstandingPermissions()) {
+      requestAllPermissions();
+      return;
+    }
+
+    try {
+      location_client
+          .getLastLocation()
+          .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+              if (location != null) {
+                map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
+              }
+            }
+          });
+
+    } catch (SecurityException e) {
+      Timber.e(e, "Attempted to use LocationClient without permissions.");
+    }
+
   }
 
   @Override
@@ -72,9 +141,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     updateUI();
   }
 
-  @OnClick(R.id.fab_search)
-  public void search_click() {
-    dialog = new AbstractPlacesSearchDialog(this, dialog_listener) {
+  private void search_click() {
+    lookup_dialog = new AbstractPlacesSearchDialog(this, dialog_listener) {
       @Override
       protected LatitudeLongitude getOrigin() {
         CameraPosition camera = map.getCameraPosition();
@@ -82,7 +150,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
       }
     };
 
-    dialog.show();
+    lookup_dialog.show();
   }
 
   private AbstractPlacesSearchDialog.Listener dialog_listener = new AbstractPlacesSearchDialog.Listener() {
@@ -105,4 +173,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
       }
     }
   };
+
+  @Override protected void onGrantedOverlayPermission() { }
+  @Override protected void onRefusedOverlayPermission() { }
+  @Override protected String[] getRequiredPermissions() { return CoecClientApp.permissions_required; }
+  @Override protected void onPermissionsGranted() { updateUI(); }
+  @Override protected void onNotAllPermissionsGranted() { }
+  @Override protected void onUnecessaryCallToRequestOverlayPermission() { }
 }
