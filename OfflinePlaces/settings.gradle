@@ -1,1 +1,1 @@
-include ':lib.lookup.client', ':lib.lookup.provider', ':app.looukp.provider', ':app.lookup.client.sample', ':app.coec.client'
+include ':lib.lookup.client', ':lib.lookup.provider', ':app.looukp.provider', ':app.lookup.client.sample', ':app.coec.client', ':lib.coec.client'

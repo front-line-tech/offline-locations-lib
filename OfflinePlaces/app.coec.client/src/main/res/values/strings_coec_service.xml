@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="notification_title_coec_service">A Cop on Every Corner</string>
+    <string name="notification_content_coec_service">
+        Click here to return to your copportunities.
+    </string>
+    <string name="notification_ticker_coec_service">
+        A Cop on Every Corner is running.
+    </string>
+
+</resources>

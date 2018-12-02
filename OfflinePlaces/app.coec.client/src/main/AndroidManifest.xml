@@ -3,6 +3,7 @@
     package="com.flt.coecclient">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -11,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        android:name=".CoecClientApp">
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -25,6 +27,24 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".service.CoecService"
+            android:icon="@drawable/ic_new_releases_black_24dp"
+            android:label="@string/notification_title_coec_service"
+            android:exported="false"
+
+            />
+
+        <receiver
+            android:name=".receivers.StartupReceiver"
+            android:enabled="true"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 </manifest>

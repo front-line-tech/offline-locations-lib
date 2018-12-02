@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$/app.coec.client" />
             <option value="$PROJECT_DIR$/app.lookup.client.sample" />
             <option value="$PROJECT_DIR$/app.looukp.provider" />
+            <option value="$PROJECT_DIR$/lib.coec.client" />
             <option value="$PROJECT_DIR$/lib.lookup.client" />
             <option value="$PROJECT_DIR$/lib.lookup.provider" />
           </set>

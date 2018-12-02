@@ -2,13 +2,14 @@ package com.flt.coecclient.ui;
 
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flt.coecclient.CoecClientApp;
 import com.flt.coecclient.R;
+import com.flt.coecclient.service.CoecService;
+import com.flt.coecclient.service.ICoecService;
 import com.flt.liblookupclient.LookupClient;
 import com.flt.liblookupclient.entities.OpenNamesHelper;
 import com.flt.liblookupclient.entities.OpenNamesPlace;
@@ -16,6 +17,7 @@ import com.flt.liblookupclient.geo.GeoConverter;
 import com.flt.liblookupclient.geo.LatitudeLongitude;
 import com.flt.liblookupclient.ui.dialogs.AbstractPlacesSearchDialog;
 import com.flt.servicelib.AbstractPermissionExtensionAppCompatActivity;
+import com.flt.servicelib.AbstractServiceBoundAppCompatActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,7 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class MapsActivity extends AbstractPermissionExtensionAppCompatActivity implements OnMapReadyCallback {
+public class MapsActivity extends AbstractServiceBoundAppCompatActivity<CoecService, ICoecService> implements OnMapReadyCallback {
 
   private static final String TAG = MapsActivity.class.getSimpleName();
 
@@ -45,6 +47,8 @@ public class MapsActivity extends AbstractPermissionExtensionAppCompatActivity i
   private LookupClient lookup_client;
   private AbstractPlacesSearchDialog lookup_dialog;
 
+  private float move_zoom = 7.0f;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -52,6 +56,11 @@ public class MapsActivity extends AbstractPermissionExtensionAppCompatActivity i
     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
     mapFragment.getMapAsync(this);
     ButterKnife.bind(this);
+  }
+
+  @Override
+  protected void onBoundChanged(boolean isBound) {
+    updateUI();
   }
 
   private void prepareClients() {
@@ -63,7 +72,9 @@ public class MapsActivity extends AbstractPermissionExtensionAppCompatActivity i
     return new LookupClient(this);
   }
 
-  private FusedLocationProviderClient createLocationClient() { return LocationServices.getFusedLocationProviderClient(this); }
+  private FusedLocationProviderClient createLocationClient() {
+    return LocationServices.getFusedLocationProviderClient(this);
+  }
 
   private void prepareSpeedDial() {
     speeddial.addActionItem(
@@ -102,7 +113,7 @@ public class MapsActivity extends AbstractPermissionExtensionAppCompatActivity i
 
   private void updateUI() {
     boolean hasMap = map != null;
-    boolean maySearch = hasMap && LookupClient.providerPresentOnDevice(this);
+    boolean maySearch = bound && hasMap && LookupClient.providerPresentOnDevice(this);
     speeddial.setVisibility(maySearch ? View.VISIBLE : View.GONE);
     text_state.setText(maySearch ? R.string.state_ready : R.string.state_provider_unavailable);
   }
@@ -120,7 +131,7 @@ public class MapsActivity extends AbstractPermissionExtensionAppCompatActivity i
             @Override
             public void onSuccess(Location location) {
               if (location != null) {
-                map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), move_zoom));
               }
             }
           });
@@ -135,8 +146,12 @@ public class MapsActivity extends AbstractPermissionExtensionAppCompatActivity i
   public void onMapReady(GoogleMap googleMap) {
     map = googleMap;
 
-    LatLng london = new LatLng(51.5074, -0.1278);
-    map.moveCamera(CameraUpdateFactory.newLatLngZoom(london, 7.0f));
+    if (anyOutstandingPermissions()) {
+      LatLng london = new LatLng(51.5074, -0.1278);
+      map.moveCamera(CameraUpdateFactory.newLatLngZoom(london, move_zoom));
+    } else {
+      centre_click();
+    }
 
     updateUI();
   }
