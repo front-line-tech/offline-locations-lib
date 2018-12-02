@@ -16,7 +16,6 @@ import com.flt.liblookupclient.entities.OpenNamesPlace;
 import com.flt.liblookupclient.geo.GeoConverter;
 import com.flt.liblookupclient.geo.LatitudeLongitude;
 import com.flt.liblookupclient.ui.dialogs.AbstractPlacesSearchDialog;
-import com.flt.servicelib.AbstractPermissionExtensionAppCompatActivity;
 import com.flt.servicelib.AbstractServiceBoundAppCompatActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;

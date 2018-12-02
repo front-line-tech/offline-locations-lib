@@ -8,7 +8,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
-        classpath 'com.google.android.gms:oss-licenses-plugin:0.9.3'
+        classpath 'com.google.android.gms:oss-licenses-plugin:0.9.4'
     }
 }
 
@@ -22,6 +22,7 @@ allprojects {
     }
 }
 
+/*
 subprojects {
     project.configurations.all {
         resolutionStrategy.eachDependency { details ->
@@ -32,6 +33,7 @@ subprojects {
         }
     }
 }
+*/
 
 task clean(type: Delete) {
     delete rootProject.buildDir
