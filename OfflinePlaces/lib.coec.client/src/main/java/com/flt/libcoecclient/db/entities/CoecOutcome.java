@@ -41,4 +41,10 @@ public class CoecOutcome {
   public OutcomeType outcome;
 
   public String notes;
+
+  @Override
+  public int hashCode() {
+    return outcome_uuid != null ? outcome_uuid.hashCode() : super.hashCode();
+  }
+
 }

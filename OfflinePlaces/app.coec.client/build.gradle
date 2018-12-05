@@ -76,5 +76,11 @@ dependencies {
     implementation 'com.google.android.gms:play-services-oss-licenses:16.0.1'
     implementation 'com.leinardi.android:speed-dial:2.0.1'
 
+    implementation "androidx.lifecycle:lifecycle-extensions:2.0.0-rc01"
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.0.0-rc01"
+
+    implementation "androidx.room:room-runtime:2.0.0"
+    annotationProcessor "androidx.room:room-compiler:2.0.0"
+
     implementation project(':lib.coec.client')
 }

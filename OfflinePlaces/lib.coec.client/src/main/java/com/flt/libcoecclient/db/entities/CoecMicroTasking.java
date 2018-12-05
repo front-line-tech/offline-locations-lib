@@ -31,9 +31,15 @@ public class CoecMicroTasking {
   public int current_successes;
   public int max_successes;
 
+  public int points;
+
   public boolean marked_complete;
 
   public double catchment_m;
   @Embedded(prefix = "at_") public CoecLocation location;
 
+  @Override
+  public int hashCode() {
+    return tasking_uuid != null ? tasking_uuid.hashCode() : super.hashCode();
+  }
 }

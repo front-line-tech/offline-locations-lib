@@ -19,4 +19,9 @@ public class CoecOperative {
   public String shoulder;
   public String warrant_or_pay;
 
+  @Override
+  public int hashCode() {
+    return operative_uuid != null ? operative_uuid.hashCode() : super.hashCode();
+  }
+
 }

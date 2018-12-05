@@ -10,6 +10,7 @@ import com.flt.coecclient.CoecClientApp;
 import com.flt.coecclient.R;
 import com.flt.coecclient.service.CoecService;
 import com.flt.coecclient.service.ICoecService;
+import com.flt.libcoecclient.db.entities.CoecMicroTasking;
 import com.flt.liblookupclient.LookupClient;
 import com.flt.liblookupclient.entities.OpenNamesHelper;
 import com.flt.liblookupclient.entities.OpenNamesPlace;
@@ -23,12 +24,27 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.UUID;
+
+import androidx.lifecycle.LiveData;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
@@ -46,7 +62,13 @@ public class MapsActivity extends AbstractServiceBoundAppCompatActivity<CoecServ
   private LookupClient lookup_client;
   private AbstractPlacesSearchDialog lookup_dialog;
 
-  private float move_zoom = 7.0f;
+  private Timer timer;
+
+  private float move_zoom = 14.0f;
+
+  private Map<UUID, Marker> currentMarkers = new HashMap<>();
+  private LiveData<List<CoecMicroTasking>> liveTaskings;
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +82,7 @@ public class MapsActivity extends AbstractServiceBoundAppCompatActivity<CoecServ
   @Override
   protected void onBoundChanged(boolean isBound) {
     updateUI();
+    updateMapFromBoundaries();
   }
 
   private void prepareClients() {
@@ -108,6 +131,39 @@ public class MapsActivity extends AbstractServiceBoundAppCompatActivity<CoecServ
     prepareClients();
     prepareSpeedDial();
     updateUI();
+    startTimer();
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    stopTimer();
+  }
+
+  private void stopTimer() {
+    Timber.i("Timer stopped.");
+    if (timer != null) {
+      timer.cancel();
+      timer = null;
+    }
+  }
+
+  private void startTimer() {
+    if (timer != null) { return; }
+
+    Timber.i("Timer started.");
+
+    timer = new Timer();
+    TimerTask timerTask = new TimerTask() {
+      @Override
+      public void run() {
+        runOnUiThread(() -> {
+          Timber.d("Timer ping.");
+          updateMapFromBoundaries();
+        });
+      }
+    };
+    timer.scheduleAtFixedRate(timerTask, 0, 1000);
   }
 
   private void updateUI() {
@@ -115,7 +171,19 @@ public class MapsActivity extends AbstractServiceBoundAppCompatActivity<CoecServ
     boolean maySearch = bound && hasMap && LookupClient.providerPresentOnDevice(this);
     speeddial.setVisibility(maySearch ? View.VISIBLE : View.GONE);
     text_state.setText(maySearch ? R.string.state_ready : R.string.state_provider_unavailable);
+
+    if (hasMap) { enable_my_location(); }
   }
+
+  private void enable_my_location() {
+    try {
+      map.setMyLocationEnabled(true);
+
+    } catch (SecurityException e) {
+    Timber.e(e, "Attempted to use LocationClient without permissions.");
+  }
+
+}
 
   private void centre_click() {
     if (anyOutstandingPermissions()) {
@@ -145,14 +213,55 @@ public class MapsActivity extends AbstractServiceBoundAppCompatActivity<CoecServ
   public void onMapReady(GoogleMap googleMap) {
     map = googleMap;
 
+    boolean success = map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));
+
     if (anyOutstandingPermissions()) {
       LatLng london = new LatLng(51.5074, -0.1278);
-      map.moveCamera(CameraUpdateFactory.newLatLngZoom(london, move_zoom));
+      LatLng lincpol = new LatLng(53.268451, -0.499303);
+      map.moveCamera(CameraUpdateFactory.newLatLngZoom(lincpol, move_zoom));
     } else {
       centre_click();
+      enable_my_location();
     }
 
+    map.setOnCameraIdleListener(() -> updateMapFromBoundaries());
+
     updateUI();
+    updateMapFromBoundaries();
+  }
+
+  private void updateMapFromBoundaries() {
+    if (!bound) { return; }
+    LatLngBounds bounds = map.getProjection().getVisibleRegion().latLngBounds;
+
+    if (liveTaskings != null) { liveTaskings.removeObservers(this); }
+
+    liveTaskings = service.getLiveTaskingsFor(
+      bounds.northeast.latitude,
+      bounds.southwest.longitude,
+      bounds.southwest.latitude,
+      bounds.northeast.longitude);
+
+    liveTaskings.observe(this, items -> {
+        Date now = new Date();
+        for (CoecMicroTasking tasking : items) {
+          // add new markers
+          if (tasking.begins.before(now) && tasking.ends.after(now) && !tasking.marked_complete) {
+            if (!currentMarkers.containsKey(tasking.tasking_uuid)) {
+              runOnUiThread(() -> {
+                Marker marker = map.addMarker(
+                    new MarkerOptions()
+                        .position(new LatLng(tasking.location.latitude, tasking.location.longitude))
+                        .title(tasking.title)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.stella_tiny))
+                        .anchor(0.5f, 0.5f)
+                        .snippet(tasking.description));
+                currentMarkers.put(tasking.tasking_uuid, marker);
+              });
+            }
+          }
+        }
+    });
   }
 
   private void search_click() {

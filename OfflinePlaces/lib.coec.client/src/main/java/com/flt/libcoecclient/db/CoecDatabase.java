@@ -16,7 +16,7 @@ import androidx.room.TypeConverters;
     CoecMicroTasking.class,
     CoecOutcome.class,
     CoecOperative.class },
-    version = 2,
+    version = 5,
     exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class CoecDatabase extends RoomDatabase {
