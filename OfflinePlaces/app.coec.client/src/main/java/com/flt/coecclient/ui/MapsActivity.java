@@ -231,6 +231,8 @@ public class MapsActivity extends AbstractServiceBoundAppCompatActivity<CoecServ
 
     map.setOnCameraIdleListener(() -> updateMapFromBoundaries());
 
+    map.setInfoWindowAdapter(new CoecTaskingInfoWindowAdapter(this));
+
     updateUI();
     updateMapFromBoundaries();
   }
@@ -261,6 +263,9 @@ public class MapsActivity extends AbstractServiceBoundAppCompatActivity<CoecServ
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.stella_tiny))
                         .anchor(0.5f, 0.5f)
                         .snippet(tasking.description));
+
+                marker.setTag(tasking); // keep the tasking!
+
                 currentMarkers.put(tasking.tasking_uuid, marker);
               });
             }
