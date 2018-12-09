@@ -32,15 +32,30 @@
             android:name=".service.CoecService"
             android:icon="@drawable/ic_new_releases_black_24dp"
             android:label="@string/notification_title_coec_service"
-            android:exported="false"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="coec.ACTION_RECEIVE_TASK" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="*/*"/>
 
-            />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".service.CoecFirebaseMessagingService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
 
         <receiver
             android:name=".receivers.StartupReceiver"
             android:enabled="true"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

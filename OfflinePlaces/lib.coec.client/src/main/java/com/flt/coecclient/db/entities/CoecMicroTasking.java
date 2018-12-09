@@ -1,6 +1,6 @@
-package com.flt.libcoecclient.db.entities;
+package com.flt.coecclient.db.entities;
 
-import com.flt.libcoecclient.db.pojos.CoecLocation;
+import com.flt.coecclient.db.pojos.CoecLocation;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Date;

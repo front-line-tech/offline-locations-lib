@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 28
@@ -82,5 +83,17 @@ dependencies {
     implementation "androidx.room:room-runtime:2.0.0"
     annotationProcessor "androidx.room:room-compiler:2.0.0"
 
-    implementation project(':lib.coec.client')
+    implementation 'com.google.firebase:firebase-core:+'
+    implementation 'com.google.firebase:firebase-messaging:+'
+
+    implementation 'com.github.instantiator:background-service-lib:1.8'
+    implementation 'org.apache.commons:commons-lang3:3.7'
+
+    implementation 'front-line-tech.android-libs:offline-locations-lib:1.1'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:6.4.0'
+
+    implementation 'org.apache.commons:commons-collections4:4.1'
+    implementation 'org.apache.commons:commons-lang3:3.7'
+
+
 }

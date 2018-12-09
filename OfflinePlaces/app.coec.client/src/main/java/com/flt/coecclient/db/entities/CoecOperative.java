@@ -1,4 +1,4 @@
-package com.flt.libcoecclient.db.entities;
+package com.flt.coecclient.db.entities;
 
 import java.util.UUID;
 

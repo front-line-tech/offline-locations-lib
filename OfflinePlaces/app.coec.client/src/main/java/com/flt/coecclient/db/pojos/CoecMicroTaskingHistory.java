@@ -1,8 +1,8 @@
-package com.flt.libcoecclient.db.pojos;
+package com.flt.coecclient.db.pojos;
 
-import com.flt.libcoecclient.db.entities.CoecMicroTasking;
-import com.flt.libcoecclient.db.entities.CoecOperative;
-import com.flt.libcoecclient.db.entities.CoecOutcome;
+import com.flt.coecclient.db.entities.CoecMicroTasking;
+import com.flt.coecclient.db.entities.CoecOperative;
+import com.flt.coecclient.db.entities.CoecOutcome;
 
 import java.util.List;
 

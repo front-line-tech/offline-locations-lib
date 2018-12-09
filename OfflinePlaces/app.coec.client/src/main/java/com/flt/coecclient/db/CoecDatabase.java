@@ -1,12 +1,12 @@
-package com.flt.libcoecclient.db;
+package com.flt.coecclient.db;
 
-import com.flt.libcoecclient.db.dao.CoecMicroTaskingDao;
-import com.flt.libcoecclient.db.dao.CoecOperativeDao;
-import com.flt.libcoecclient.db.dao.CoecOutcomeDao;
-import com.flt.libcoecclient.db.entities.CoecOperative;
-import com.flt.libcoecclient.db.entities.CoecMicroTasking;
-import com.flt.libcoecclient.db.entities.CoecOutcome;
-import com.flt.libcoecclient.db.util.Converters;
+import com.flt.coecclient.db.dao.CoecMicroTaskingDao;
+import com.flt.coecclient.db.dao.CoecOperativeDao;
+import com.flt.coecclient.db.dao.CoecOutcomeDao;
+import com.flt.coecclient.db.entities.CoecOperative;
+import com.flt.coecclient.db.entities.CoecMicroTasking;
+import com.flt.coecclient.db.entities.CoecOutcome;
+import com.flt.coecclient.db.util.Converters;
 
 import androidx.room.Database;
 import androidx.room.RoomDatabase;

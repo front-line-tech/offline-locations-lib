@@ -53,4 +53,6 @@ dependencies {
 
     implementation "androidx.room:room-runtime:2.0.0"
     annotationProcessor "androidx.room:room-compiler:2.0.0"
+
+    api 'com.google.firebase:firebase-messaging:17.3.4'
 }

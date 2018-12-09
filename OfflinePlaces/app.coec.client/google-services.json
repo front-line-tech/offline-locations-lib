@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "973118189868",
+    "firebase_url": "https://coec-b0848.firebaseio.com",
+    "project_id": "coec-b0848",
+    "storage_bucket": "coec-b0848.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:973118189868:android:ef9c06d5362efedb",
+        "android_client_info": {
+          "package_name": "com.flt.coecclient"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "973118189868-lh673kuvhj1kgjgjb822vr3rgakahli7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.flt.coecclient",
+            "certificate_hash": "77e0406ea1415a5c014b22892d31a21723507a99"
+          }
+        },
+        {
+          "client_id": "973118189868-oe9bjv2bggutcv6ilqg7snquv7slo1gt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyLnaOKU_imkMZo2jkTHf9y7K34T8LFg4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "973118189868-oe9bjv2bggutcv6ilqg7snquv7slo1gt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

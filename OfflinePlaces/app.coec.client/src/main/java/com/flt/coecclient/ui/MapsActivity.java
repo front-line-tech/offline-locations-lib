@@ -2,15 +2,18 @@ package com.flt.coecclient.ui;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flt.coecclient.CoecClientApp;
 import com.flt.coecclient.R;
+import com.flt.coecclient.sampledata.SampleData;
 import com.flt.coecclient.service.CoecService;
 import com.flt.coecclient.service.ICoecService;
-import com.flt.libcoecclient.db.entities.CoecMicroTasking;
+import com.flt.coecclient.db.entities.CoecMicroTasking;
 import com.flt.liblookupclient.LookupClient;
 import com.flt.liblookupclient.entities.OpenNamesHelper;
 import com.flt.liblookupclient.entities.OpenNamesPlace;
@@ -33,6 +36,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.gson.Gson;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 
@@ -43,6 +47,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.Executors;
 
 import androidx.lifecycle.LiveData;
 import butterknife.BindView;
@@ -104,10 +109,10 @@ public class MapsActivity extends AbstractServiceBoundAppCompatActivity<CoecServ
             .setLabel(R.string.sd_label_search)
             .create());
 
-    speeddial.addActionItem(
-        new SpeedDialActionItem.Builder(R.id.sd_centre, R.drawable.ic_my_location_white_24dp)
-            .setLabel(R.string.sd_label_centre)
-            .create());
+//    speeddial.addActionItem(
+//        new SpeedDialActionItem.Builder(R.id.sd_centre, R.drawable.ic_my_location_white_24dp)
+//            .setLabel(R.string.sd_label_centre)
+//            .create());
 
     speeddial.setOnActionSelectedListener(speedDialActionItem -> {
       switch (speedDialActionItem.getId()) {
@@ -296,6 +301,35 @@ public class MapsActivity extends AbstractServiceBoundAppCompatActivity<CoecServ
       }
     }
   };
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    menu.add(0, R.string.menu_test_create_items, 10, R.string.menu_test_create_items);
+    menu.add(0, R.string.menu_test_create_uuid, 10, R.string.menu_test_create_uuid);
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.string.menu_test_create_items:
+        List<CoecMicroTasking> taskings = SampleData.createSampleTaskings();
+        String json_1 = new Gson().toJson(taskings.get(0));
+        List<CoecMicroTasking> sampleTasks = SampleData.createSampleTaskings();
+        Timber.i("Adding " + sampleTasks.size() + " sample tasks.");
+        service.addTaskings(sampleTasks);
+        return true;
+
+      case R.string.menu_test_create_uuid:
+        UUID uuid = UUID.randomUUID();
+        Timber.d(uuid.toString());
+        informUser(uuid.toString());
+        return true;
+
+      default:
+        return super.onOptionsItemSelected(item);
+    }
+  }
 
   @Override protected void onGrantedOverlayPermission() { }
   @Override protected void onRefusedOverlayPermission() { }

@@ -1,4 +1,4 @@
-package com.flt.libcoecclient.db.dao;
+package com.flt.coecclient.db.dao;
 
 import androidx.room.Dao;
 

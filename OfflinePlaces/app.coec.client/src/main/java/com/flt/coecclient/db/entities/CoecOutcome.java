@@ -1,6 +1,6 @@
-package com.flt.libcoecclient.db.entities;
+package com.flt.coecclient.db.entities;
 
-import com.flt.libcoecclient.db.constants.OutcomeType;
+import com.flt.coecclient.db.constants.OutcomeType;
 
 import java.util.Date;
 import java.util.UUID;

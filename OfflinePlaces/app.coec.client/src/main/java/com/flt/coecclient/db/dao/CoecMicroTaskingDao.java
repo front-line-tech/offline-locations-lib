@@ -1,7 +1,7 @@
-package com.flt.libcoecclient.db.dao;
+package com.flt.coecclient.db.dao;
 
-import com.flt.libcoecclient.db.entities.CoecMicroTasking;
-import com.flt.libcoecclient.db.pojos.CoecMicroTaskingHistory;
+import com.flt.coecclient.db.entities.CoecMicroTasking;
+import com.flt.coecclient.db.pojos.CoecMicroTaskingHistory;
 
 import java.util.List;
 import java.util.UUID;

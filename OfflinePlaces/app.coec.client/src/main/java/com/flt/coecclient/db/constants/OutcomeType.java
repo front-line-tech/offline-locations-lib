@@ -1,4 +1,4 @@
-package com.flt.libcoecclient.db.constants;
+package com.flt.coecclient.db.constants;
 
 public enum OutcomeType {
   NotAttempted(false),

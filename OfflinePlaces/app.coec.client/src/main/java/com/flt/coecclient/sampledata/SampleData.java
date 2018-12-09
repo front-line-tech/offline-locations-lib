@@ -1,7 +1,7 @@
-package com.flt.libcoecclient.sampledata;
+package com.flt.coecclient.sampledata;
 
-import com.flt.libcoecclient.db.entities.CoecMicroTasking;
-import com.flt.libcoecclient.db.pojos.CoecLocation;
+import com.flt.coecclient.db.entities.CoecMicroTasking;
+import com.flt.coecclient.db.pojos.CoecLocation;
 
 import java.util.Date;
 import java.util.LinkedList;

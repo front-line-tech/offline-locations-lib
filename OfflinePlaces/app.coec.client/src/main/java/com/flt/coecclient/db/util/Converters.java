@@ -1,6 +1,6 @@
-package com.flt.libcoecclient.db.util;
+package com.flt.coecclient.db.util;
 
-import com.flt.libcoecclient.db.constants.OutcomeType;
+import com.flt.coecclient.db.constants.OutcomeType;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.apache.commons.lang3.StringUtils;
