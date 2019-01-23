@@ -99,4 +99,8 @@ public class CoecMicroTasking implements Parcelable {
     return 0;
   }
 
+  public boolean shouldShow(Date now) {
+    return begins.before(now) && ends.after(now) && !marked_complete;
+  }
+
 }

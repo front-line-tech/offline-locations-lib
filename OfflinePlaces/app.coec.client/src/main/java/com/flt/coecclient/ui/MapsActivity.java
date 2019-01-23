@@ -1,6 +1,11 @@
 package com.flt.coecclient.ui;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.location.Location;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +47,7 @@ import com.leinardi.android.speeddial.SpeedDialView;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -54,7 +60,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class MapsActivity extends AbstractServiceBoundAppCompatActivity<CoecService, ICoecService> implements OnMapReadyCallback {
+public class MapsActivity extends AbstractServiceBoundAppCompatActivity<CoecService, ICoecService>
+    implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
   private static final String TAG = MapsActivity.class.getSimpleName();
 
@@ -74,6 +81,7 @@ public class MapsActivity extends AbstractServiceBoundAppCompatActivity<CoecServ
   private Map<UUID, Marker> currentMarkers = new HashMap<>();
   private LiveData<List<CoecMicroTasking>> liveTaskings;
 
+  private MediaPlayer mp;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +90,17 @@ public class MapsActivity extends AbstractServiceBoundAppCompatActivity<CoecServ
     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
     mapFragment.getMapAsync(this);
     ButterKnife.bind(this);
+
+    setVolumeControlStream(AudioManager.STREAM_MUSIC); // optional
+  }
+
+  private void play(CoecSound sound) {
+    if (mp != null) {
+      mp.reset();
+      mp.release();
+    }
+    mp = MediaPlayer.create(this, sound.audio_resource);
+    mp.start();
   }
 
   @Override
@@ -175,7 +194,10 @@ public class MapsActivity extends AbstractServiceBoundAppCompatActivity<CoecServ
     boolean hasMap = map != null;
     boolean maySearch = bound && hasMap && LookupClient.providerPresentOnDevice(this);
     speeddial.setVisibility(maySearch ? View.VISIBLE : View.GONE);
-    text_state.setText(maySearch ? R.string.state_ready : R.string.state_provider_unavailable);
+    // text_state.setText(maySearch ? R.string.state_ready : R.string.state_provider_unavailable);
+    text_state.setText(bound ?
+        getString(R.string.text_accepted_X_tasks, service.countAcceptedTaskings()) :
+        getString(R.string.text_please_wait));
 
     if (hasMap) { enable_my_location(); }
   }
@@ -232,6 +254,7 @@ public class MapsActivity extends AbstractServiceBoundAppCompatActivity<CoecServ
     map.setOnCameraIdleListener(() -> updateMapFromBoundaries());
 
     map.setInfoWindowAdapter(new CoecTaskingInfoWindowAdapter(this));
+    map.setOnInfoWindowClickListener(this);
 
     updateUI();
     updateMapFromBoundaries();
@@ -251,27 +274,47 @@ public class MapsActivity extends AbstractServiceBoundAppCompatActivity<CoecServ
 
     liveTaskings.observe(this, items -> {
         Date now = new Date();
+
+        // add
         for (CoecMicroTasking tasking : items) {
-          // add new markers
-          if (tasking.begins.before(now) && tasking.ends.after(now) && !tasking.marked_complete) {
+          if (tasking.shouldShow(now)) {
             if (!currentMarkers.containsKey(tasking.tasking_uuid)) {
               runOnUiThread(() -> {
-                Marker marker = map.addMarker(
-                    new MarkerOptions()
-                        .position(new LatLng(tasking.location.latitude, tasking.location.longitude))
-                        .title(tasking.title)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.stella_tiny))
-                        .anchor(0.5f, 0.5f)
-                        .snippet(tasking.description));
-
-                marker.setTag(tasking); // keep the tasking!
-
-                currentMarkers.put(tasking.tasking_uuid, marker);
+                createMarkerForTasking(tasking);
               });
             }
           }
         }
+
+        // remove
+        List<UUID> toRemove = new LinkedList<>();
+        for (UUID tasking_id : currentMarkers.keySet()) {
+          Marker marker = currentMarkers.get(tasking_id);
+          CoecMicroTasking tasking = (CoecMicroTasking)marker.getTag();
+          if (!tasking.shouldShow(now)) {
+            toRemove.add(tasking_id);
+            runOnUiThread(() -> marker.remove());
+          }
+        }
+
+        for (UUID uuid : toRemove) {
+          currentMarkers.remove(uuid);
+        }
     });
+  }
+
+  private void createMarkerForTasking(CoecMicroTasking tasking) {
+    Marker marker = map.addMarker(
+        new MarkerOptions()
+            .position(new LatLng(tasking.location.latitude, tasking.location.longitude))
+            .title(tasking.title)
+            .icon(BitmapDescriptorFactory.fromResource(R.drawable.stella_tiny))
+            .anchor(0.5f, 0.5f)
+            .snippet(tasking.description));
+
+    marker.setTag(tasking); // keep the tasking!
+    currentMarkers.put(tasking.tasking_uuid, marker);
+    play(CoecSound.Create);
   }
 
   private void search_click() {
@@ -336,10 +379,33 @@ public class MapsActivity extends AbstractServiceBoundAppCompatActivity<CoecServ
     }
   }
 
+  @Override
+  public void onInfoWindowClick(Marker marker) {
+    if (marker != null && marker.getTag() != null && marker.getTag() instanceof CoecMicroTasking) {
+      final CoecMicroTasking tasking = (CoecMicroTasking) marker.getTag();
+      play(CoecSound.Consider);
+
+      new AlertDialog.Builder(this)
+        .setTitle(R.string.dialog_title_accept_task)
+        .setMessage(getString(R.string.dialog_message_accept_task, tasking.title))
+        .setPositiveButton(R.string.btn_accept, (dialogInterface, i) -> {
+          dialogInterface.dismiss();
+          boolean accepted = service.acceptTasking(tasking);
+          if (accepted) {play(CoecSound.Accept); }
+          updateUI();
+        })
+        .setNegativeButton(R.string.btn_cancel, (dialogInterface, i) -> dialogInterface.dismiss())
+        .create()
+        .show();
+    }
+
+  }
+
   @Override protected void onGrantedOverlayPermission() { }
   @Override protected void onRefusedOverlayPermission() { }
   @Override protected String[] getRequiredPermissions() { return CoecClientApp.permissions_required; }
   @Override protected void onPermissionsGranted() { updateUI(); }
   @Override protected void onNotAllPermissionsGranted() { }
   @Override protected void onUnecessaryCallToRequestOverlayPermission() { }
+
 }

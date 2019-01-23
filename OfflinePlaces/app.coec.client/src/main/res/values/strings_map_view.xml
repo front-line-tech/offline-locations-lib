@@ -7,4 +7,9 @@
     <string name="menu_test_create_items">Create test item</string>
     <string name="menu_test_create_uuid">Create UUID</string>
 
+    <string name="dialog_title_accept_task">Accept micro-tasking?</string>
+    <string name="dialog_message_accept_task">Do you wish to accept this side-quest?\n\n%s</string>
+
+    <string name="text_accepted_X_tasks">You have %d side-quests.</string>
+
 </resources>

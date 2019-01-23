@@ -8,4 +8,10 @@
     <string name="toast_warning_search_cancelled">Search cancelled.</string>
     <string name="toast_warning_place_has_no_location">Unable to determine coordinates for this place.</string>
 
+    <string name="btn_accept">Accept</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_ignore">Ignore</string>
+
+    <string name="text_please_wait">Please wait…</string>
+
 </resources>

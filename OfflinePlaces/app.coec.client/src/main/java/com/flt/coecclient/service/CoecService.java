@@ -15,7 +15,10 @@ import com.flt.servicelib.BackgroundServiceConfig;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 
 import androidx.annotation.NonNull;
@@ -40,10 +43,13 @@ public class CoecService extends AbstractBackgroundBindingService<ICoecService> 
   private String DB_NAME = "taskings";
   private CoecDatabase db;
 
+  private Map<UUID, CoecMicroTasking> accepted_taskings;
+
   @Override
   public void onCreate() {
     super.onCreate();
     db = createDb();
+    accepted_taskings = new LinkedHashMap<>();
   }
 
   @Override
@@ -110,6 +116,21 @@ public class CoecService extends AbstractBackgroundBindingService<ICoecService> 
   }
 
   @Override
+  public boolean acceptTasking(CoecMicroTasking tasking) {
+    if (!accepted_taskings.containsKey(tasking.tasking_uuid)) {
+      accepted_taskings.put(tasking.tasking_uuid, tasking);
+      return true;
+    } else {
+      return false; // already accepted!
+    }
+  }
+
+  @Override
+  public int countAcceptedTaskings() {
+    return accepted_taskings.size();
+  }
+
+  @Override
   public void addTaskings(final CoecMicroTasking... taskings) {
     Executors.newSingleThreadScheduledExecutor().execute(() -> {
       db.taskDao().insert_all(taskings);
@@ -125,7 +146,7 @@ public class CoecService extends AbstractBackgroundBindingService<ICoecService> 
 
   @Override
   public LiveData<List<CoecMicroTasking>> getLiveTaskingsFor(double n, double w, double s, double e) {
-    return db.taskDao().get_all(); // TODO: fix query later
-    //return db.taskDao().get_incomplete_for_area(n,w,s,e);
+    //return db.taskDao().get_all(); // TODO: fix query later
+    return db.taskDao().get_incomplete_for_area(n,w,s,e);
   }
 }

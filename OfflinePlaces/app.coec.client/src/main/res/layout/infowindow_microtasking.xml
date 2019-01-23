@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:padding="@dimen/card_inner_padding">
 
     <RelativeLayout
@@ -68,5 +68,45 @@
         android:text="(description)"
         />
 
+    <TextView
+        android:id="@+id/info_label_from"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/info_description"
+        android:layout_alignParentStart="true"
+        android:textSize="12sp"
+        android:text="From:"
+        android:layout_marginTop="10dp"
+        />
+
+    <TextView
+        android:id="@+id/info_label_to"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/info_label_from"
+        android:layout_alignParentStart="true"
+        android:textSize="12sp"
+        android:text="To:"
+        />
+
+    <com.github.curioustechizen.ago.RelativeTimeTextView
+        android:id="@+id/info_timestamp_from"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/info_label_from"
+        android:layout_alignTop="@id/info_label_from"
+        android:textSize="12sp"
+        android:layout_marginStart="7dp"
+        />
+
+    <com.github.curioustechizen.ago.RelativeTimeTextView
+        android:id="@+id/info_timestamp_to"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/info_label_to"
+        android:layout_alignTop="@id/info_label_to"
+        android:textSize="12sp"
+        android:layout_marginStart="7dp"
+        />
 
 </RelativeLayout>

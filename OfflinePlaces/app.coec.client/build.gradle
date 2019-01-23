@@ -95,5 +95,6 @@ dependencies {
     implementation 'org.apache.commons:commons-collections4:4.1'
     implementation 'org.apache.commons:commons-lang3:3.7'
 
+    implementation 'com.github.curioustechizen.android-ago:library:1.4.0'
 
 }
